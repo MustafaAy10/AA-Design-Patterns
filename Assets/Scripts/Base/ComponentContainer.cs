@@ -1,6 +1,7 @@
 namespace DevelopmentKit.Base.Component 
 {
     using System.Collections.Generic;
+    using UnityEngine;
 
     public class ComponentContainer
     {
@@ -13,6 +14,11 @@ namespace DevelopmentKit.Base.Component
 
         public void AddComponent(string componentKey, object component) 
         {
+            if (components.ContainsKey(componentKey))
+            {
+                Debug.LogError("[ComponentContainer] Can't AddComponent because the key: " +  componentKey  + " is already exist.");
+                return;
+            }
             components.Add(componentKey, component);
         }
 

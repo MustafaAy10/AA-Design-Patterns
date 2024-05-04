@@ -22,8 +22,8 @@ namespace ArrowProject.Component
         private float fireTime;
         private ArrowCollector arrowCollector;
         private int levelArrowCount; // Arrow  eðer RotatingBoarda çarptýðýnda bir azalacak,
-        private int currentArrowCount; // Baþlangýçta hem levelArrowCount hem currentArrowCount ayný deðere sahip,
-                                       // ama currentArrowCount Player her Arrow fýrlattýðýnda azalacak.
+        private int playerArrowCount; // Baþlangýçta hem levelArrowCount hem playerArrowCount ayný deðere sahip,
+                                       // ama playerArrowCount Player her Arrow fýrlattýðýnda azalacak.
 
         public void Initialize(ComponentContainer _componentContainer)
         {
@@ -43,7 +43,6 @@ namespace ArrowProject.Component
             isGameOver = false;
             inputSystemReferance.OnScreenTouch += OnScreenTouch;
             arrowCollector.OnArrowHitBoard += OnArrowHitBoard;
-            arrowCollector.OnGameOver += OnArrowHitArrow;
         }
 
         public void InjectArrowCollector(ArrowCollector arrowCollector)
@@ -73,19 +72,18 @@ namespace ArrowProject.Component
         {
             inputSystemReferance.OnScreenTouch -= OnScreenTouch;
             arrowCollector.OnArrowHitBoard -= OnArrowHitBoard;
-            arrowCollector.OnGameOver -= OnArrowHitArrow;
         }
 
         public void SetLevel(int count)
         {
             levelArrowCount = count;
-            currentArrowCount = count;
+            playerArrowCount = count;
             UpdateText();
         }
 
         private void UpdateText()
         {
-            levelArrowCountText.text = currentArrowCount.ToString();
+            levelArrowCountText.text = playerArrowCount.ToString();
         }
 
         private void OnArrowHitBoard()
@@ -99,26 +97,20 @@ namespace ArrowProject.Component
 
         }
 
-        private void OnArrowHitArrow()
-        {
-            //levelArrowCount--;
-            //UpdateText();
-
-        }
-
         private void Shoot()
         {
             //if (fireTime > fireNextSpawn + fireRate)
             //{
-            if (currentArrowCount > 0)  // Böylelikle son ok havada iken yani levelcomplete olmamýþ iken
-                                        // yeni Arrow fýrlatýlmasýný engelliyoruz. Player'un Texti currentArrowCountu
+            if (playerArrowCount > 0)  // Böylelikle son ok havada iken yani levelcomplete olmamýþ iken
+                                        // yeni Arrow fýrlatýlmasýný engelliyoruz. Player'un Texti playerArrowCountu
                                         // gösteriyor, o da sýfýr iken yeni Arrow atma, çünkü son Arrow havada olabilir
                                         // oyun durmamýþ olabilir. 
             {
-                Arrow arrow = arrowCollector.GetBullet();
+                Arrow arrow = arrowCollector.GetArrow();
                 arrow.transform.position = transform.position;
-                arrow.SetArrowText(currentArrowCount);
-                currentArrowCount--;
+
+                arrow.SetArrowText(playerArrowCount);
+                playerArrowCount--;
                 UpdateText();
                 // fireNextSpawn = fireTime;
             }

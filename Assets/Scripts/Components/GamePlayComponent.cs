@@ -77,7 +77,6 @@ namespace ArrowProject.Component
 
             inputSystem.Init();
             player.Init();
-            arrowCollector.OnGameOver += GameOver;
         }
 
         public void LoadLevel()
@@ -89,10 +88,10 @@ namespace ArrowProject.Component
 
         public void OnExit()
         {
-            arrowCollector.OnGameOver -= GameOver;
+
         }
 
-        public void GameOver()
+        public void TriggerGameOver()
         {
             if (OnGameOver != null)
             {

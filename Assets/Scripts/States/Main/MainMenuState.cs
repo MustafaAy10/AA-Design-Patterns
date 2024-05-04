@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace ArrowProject.State
 {
@@ -25,13 +26,13 @@ namespace ArrowProject.State
 
         private void OnPlayButtonClick()
         {
-            UnityEngine.PlayerPrefs.SetInt("levelIndex", 0);
+            PlayerPrefs.SetInt("levelIndex", 0);
             SendTrigger((int)StateTriggers.START_GAME_REQUEST);
         }
 
         protected override void OnEnter()
         {
-            UnityEngine.Debug.Log("MainMenuState.OnEnter() called...");
+            Debug.Log("MainMenuState.OnEnter() called...");
 
             mainMenuCanvas.OnPlayButtonClick += OnPlayButtonClick;
             uiComponent.EnableCanvas(UIComponent.MenuName.MAIN_MENU);
@@ -39,7 +40,7 @@ namespace ArrowProject.State
 
         protected override void OnExit()
         {
-            UnityEngine.Debug.Log("MainMenuState.OnExit() called...");
+            Debug.Log("MainMenuState.OnExit() called...");
 
             mainMenuCanvas.OnPlayButtonClick -= OnPlayButtonClick;
             uiComponent.CloseCanvas();

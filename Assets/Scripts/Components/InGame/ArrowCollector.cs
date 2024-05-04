@@ -16,18 +16,17 @@ namespace ArrowProject.Component
 
         public delegate void ArrowHitDelegate();
         public event ArrowHitDelegate OnArrowHitBoard;
-        public event ArrowHitDelegate OnGameOver;
+        // public event ArrowHitDelegate OnGameOver;
 
         public ArrowCollector(ComponentContainer componentContainer)
         {
 
             pool = new Pool<Arrow>(SOURCE_OBJECT_PATH);
             pool.PopulatePool(10);
-
-            // gamePlayComponent = componentContainer.GetComponent(ComponentKeys.GamePlayComponent) as GamePlayComponent;
+            gamePlayComponent = componentContainer.GetComponent(ComponentKeys.GamePlayComponent) as GamePlayComponent;
         }
 
-        public Arrow GetBullet()
+        public Arrow GetArrow()
         {
             var arrow = pool.GetObjectFromPool();
             arrow.InjectArrowCollector(this);
@@ -58,12 +57,9 @@ namespace ArrowProject.Component
             }
         }
 
-        public void TriggerGameOver()
+        public void GameOver()
         {
-            if (OnGameOver != null)
-            {
-                OnGameOver();
-            }
+            gamePlayComponent.TriggerGameOver();
         }
 
         public void TriggerArrowHitBoard()
