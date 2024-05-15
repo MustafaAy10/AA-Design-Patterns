@@ -9,7 +9,7 @@ namespace ArrowProject.Component
     // [RequireComponent(typeof(Rigidbody2D))]
     public class Arrow : MonoBehaviour, IPoolable, IUpdatable
     {
-        private const float SPEED = 18f;
+        private const float SPEED = 6f;
         private Transform _transform;
         private Rigidbody2D rigidbody;
 
@@ -51,7 +51,12 @@ namespace ArrowProject.Component
 
         public void CallUpdate()
         {
-            _transform.Translate(Vector2.up * SPEED * Time.deltaTime, Space.World);  
+            _transform.Translate(_transform.up * SPEED * Time.deltaTime, Space.World);  // Böylelikle Arrow, RotatingCircle'a yandan da atýlsa yukarýdan da atýlsa
+                                                                                        // rotatingCircle'a ilerleyecek. Ama önce Arrow'a fýrlatmadan önce yön vermek gerekiyordu.
+                                                                                        // Bunun için Player.cs'te de
+                                                                                        // arrow.transform.up = rotatingCircle.transform.position - arrow.transform.position
+                                                                                        // þeklinde bir ayarlama yaptýk.
+           // _transform.Translate(Vector2.up * SPEED * Time.deltaTime, Space.World);  
             // rigidbody.MovePosition(rigidbody.position + Vector2.up * SPEED * Time.deltaTime);
         }
 
@@ -105,8 +110,11 @@ namespace ArrowProject.Component
                 other.GetComponent<Arrow>().touched = true; // Bu satýr ile havada çarpýþan iki Arrow durumunda veya
                                                             // biri havada diðeri RotatingBoard'ta olan iki Arrow çarpýþtýðýnda
                                                             // sadece bir Arrow scriptinin bu if içi çalýþacak diðeri çalýþmayacak
-                                                            // böylelikle iki kez gameOver çalýþtýrmayacaðýz.
-                arrowCollector.AddArrowToRotatingCircle(this);
+                                                            // böylelikle iki kez arrowCollector.GameOver() çalýþtýrmayacaðýz.
+                // arrowCollector.AddArrowToRotatingCircle(this);  // Ýki Arrow havada veya biri havada biri board üzerindeyken çarpýþsa da bu satýra gerek kalmayacak,
+                                                                   // havada olan Arrow activeArrow'larda kalacak, ama GameOver() dendiði için CallUpdateler çalýþmayacak
+                                                                   // yani ilerlemeyecek ve activeArrow listesinde kalmasýnda da bir sýkýntý yok
+                                                                   // arrowCollector.OnDestruct()'ta da ortak havuza aktarýlacak Arrowlar.
                 arrowCollector.GameOver();
                 //}
 
@@ -127,7 +135,7 @@ namespace ArrowProject.Component
             // Böylelikle sadece sabit bir noktadan deðil pek çok açýdan arrow atýlsaydý RotatingCircle'a doðru oranda düzeltme saðlanacaktý.
             _transform.position += _transform.up * difference;  
 
-            // Debug.Log($"Arrow transform.up = {_transform.up} ,  transform.position = {_transform.position} , currentDistance = {currentDistance}  , correctDistance = {correctDistanceBetweenRotatingCircleAndTouchingArrow} ,  difference = {difference}");
+            Debug.Log($"Arrow transform.up = {_transform.up} ,  transform.up.magnitude = {transform.up.magnitude} , currentDistance = {currentDistance}  , correctDistance = {correctDistanceBetweenRotatingCircleAndTouchingArrow} ,  difference = {difference}");
             
             // -------------------------------------------------------------------------------
 

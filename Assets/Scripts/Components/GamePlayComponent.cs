@@ -47,7 +47,7 @@ namespace ArrowProject.Component
         {
             player = FindObjectOfType<Player>();
             player.Initialize(componentContainer);
-            player.InjectInputSystem(inputSystem);
+            player.Inject(inputSystem, rotatingCircle);
             player.InjectArrowCollector(arrowCollector);
         }
 
